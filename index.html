@@ -97,6 +97,8 @@ input:focus{border-color:#3D3D9E}
 .spsec{border-top:1px solid #e8e8e2;margin-top:10px;padding-top:10px}
 .sv-btn{width:100%;padding:13px;background:#A8C72A;color:#2a2a7a;border:none;border-radius:10px;font-size:16px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-top:10px;font-family:"Barlow Condensed",sans-serif}
 .sv-note{font-size:11px;color:#888;text-align:center;margin-top:6px}
+input[type=password]{width:100%;padding:11px 12px;font-size:14px;font-family:"Barlow",sans-serif;border:1px solid #e8e8e2;border-radius:10px;background:#f8f8f6;color:#1a1a18;margin-bottom:10px;outline:none}
+input[type=password]:focus{border-color:#3D3D9E}
 .adm-sel{width:100%;padding:9px 11px;font-size:13px;border:1px solid #e8e8e2;border-radius:10px;background:#f8f8f6;color:#1a1a18;margin-top:5px;outline:none}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#3D3D9E;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap}
 .toast.show{opacity:1}
@@ -123,8 +125,16 @@ input:focus{border-color:#3D3D9E}
     <div class="s-lbl">Correo empresarial</div>
     <input type="text" id="inp-email" placeholder="tunombre@sisol.com.mx" oninput="validateEmailInput()" onkeydown="if(event.key==='Enter')sendMagicLink()">
     <div class="err" id="err-email">Solo se permiten correos @sisol.com.mx</div>
-    <p style="font-size:11px;color:#888;margin-bottom:10px;line-height:1.4">Te enviaremos un enlace de acceso. Sin contraseña.</p>
+    <p style="font-size:11px;color:#888;margin-bottom:6px;line-height:1.4">Opción 1 — Sin contraseña, te enviamos un enlace a tu correo:</p>
     <button class="btn-p" id="btn-send" onclick="sendMagicLink()" disabled>Enviar enlace de acceso &rarr;</button>
+    <div style="display:flex;align-items:center;gap:10px;margin:12px 0">
+      <div style="flex:1;height:1px;background:#e8e8e2"></div>
+      <span style="font-size:11px;color:#aaa">o</span>
+      <div style="flex:1;height:1px;background:#e8e8e2"></div>
+    </div>
+    <p style="font-size:11px;color:#888;margin-bottom:6px;line-height:1.4">Opción 2 — Con contraseña:</p>
+    <input type="password" id="inp-pass" placeholder="Contraseña" onkeydown="if(event.key==='Enter')loginWithPassword()" style="margin-bottom:6px">
+    <button class="btn-l" id="btn-pass" onclick="loginWithPassword()">Entrar con contraseña</button>
   </div>
   <div id="step-name" class="s-card" style="display:none">
     <div class="s-title">¿Cómo te llamas?</div>
@@ -217,6 +227,21 @@ async function sendMagicLink(){
   document.getElementById("step-email").style.display="none";
   document.getElementById("sent-to").textContent=email;
   document.getElementById("step-check").style.display="block";
+}
+
+async function loginWithPassword(){
+  const email=document.getElementById("inp-email").value.trim().toLowerCase();
+  const pass=document.getElementById("inp-pass").value;
+  if(!email.endsWith("@"+DOMAIN)||!pass){toast("Completa correo y contraseña");return;}
+  const btn=document.getElementById("btn-pass");
+  btn.innerHTML='<span class="spin"></span>Entrando...';btn.disabled=true;
+  const {data,error}=await SB.auth.signInWithPassword({email:email,password:pass});
+  if(error){
+    toast("Correo o contraseña incorrectos");
+    btn.innerHTML="Entrar con contraseña";btn.disabled=false;
+    return;
+  }
+  if(data.user) await afterAuth(data.user);
 }
 
 async function resend(){
