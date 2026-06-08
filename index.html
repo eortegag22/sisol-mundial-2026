@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Sisol Mundial 2026 v3 -->
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -349,7 +350,8 @@ function rRanking(){
       const sp=cache.spUsers[u.id]||{};
       const c=cache.special.campeon?(sp.campeon===cache.special.campeon?"✅":"❌"):(sp.campeon?(FLAGS[sp.campeon]||"")+" "+sp.campeon:"—");
       const r=cache.special.ronda_mexico?(sp.ronda_mexico===cache.special.ronda_mexico?"✅":"❌"):(sp.ronda_mexico||"—");
-      return'<tr class="'+(i<3?"r"+(i+1):"")+'"><td>'+(md[i]||(i+1))+'</td><td style="font-weight:600">'+u.name+(u.id===CU.id?'<span style="font-size:9px;color:var(--sl-dk);margin-left:4px;font-weight:700">TÚ</span>':"")+'</td><td><span class="sc">'+u.ac+"</span></td><td style="font-size:11px">"+c+"</td><td style="font-size:11px">"+r+"</td></tr>";
+      const youTag=u.id===CU.id?'<span style="font-size:9px;color:var(--sl-dk);margin-left:4px;font-weight:700">TU</span>':'';
+      return'<tr class="'+(i<3?'r'+(i+1):'')+'"><td>'+(md[i]||(i+1))+'</td><td style="font-weight:600">'+u.name+youTag+'</td><td><span class="sc">'+u.ac+'</span></td><td>'+c+'</td><td>'+r+'</td></tr>';
     }).join("")+"</tbody></table></div>";
 }
 
