@@ -200,11 +200,11 @@ const EQUIPOS=[
 const FLAGS={
   México:"🇲🇽",EUA:"🇺🇸",Canadá:"🇨🇦",Brasil:"🇧🇷",Argentina:"🇦🇷",
   Francia:"🇫🇷",Alemania:"🇩🇪",España:"🇪🇸",Portugal:"🇵🇹",Bélgica:"🇧🇪",
-  Japón:"🇯🇵",Holanda:"🇳🇱",Inglaterra:"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Corea del Sur":"🇰🇷",Croacia:"🇭🇷",
+  Japón:"🇯🇵",Holanda:"🇳🇱",Inglaterra:"🏴","Corea del Sur":"🇰🇷",Croacia:"🇭🇷",
   Marruecos:"🇲🇦",Colombia:"🇨🇴",Polonia:"🇵🇱",Uruguay:"🇺🇾",Suiza:"🇨🇭",
   Australia:"🇦🇺",Turquía:"🇹🇷",Senegal:"🇸🇳",Noruega:"🇳🇴",Austria:"🇦🇹",
   Sudáfrica:"🇿🇦","Rep. Checa":"🇨🇿",Bosnia:"🇧🇦",Qatar:"🇶🇦",
-  Haití:"🇭🇹",Escocia:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",Paraguay:"🇵🇾",Australia:"🇦🇺",
+  Haití:"🇭🇹",Escocia:"🏴",Paraguay:"🇵🇾",Australia:"🇦🇺",
   Curazao:"🇨🇼","Costa de Marfil":"🇨🇮",Ecuador:"🇪🇨",Túnez:"🇹🇳",
   Suecia:"🇸🇪",Egipto:"🇪🇬",Irán:"🇮🇷","Nueva Zelanda":"🇳🇿",
   "Cabo Verde":"🇨🇻","Arabia Saudita":"🇸🇦",Irak:"🇮🇶",Argelia:"🇩🇿",
@@ -597,9 +597,9 @@ function rPronos(){
       let hCls="pb"; if(p==="H"){ hCls+=" sH"; if(r) hCls+=p===r?" hit":" miss"; } if(!ed) hCls+=" locked";
       let dCls="pb"; if(p==="D"){ dCls+=" sD"; if(r) dCls+=p===r?" hit":" miss"; } if(!ed) dCls+=" locked";
       let aCls="pb"; if(p==="A"){ aCls+=" sA"; if(r) aCls+=p===r?" hit":" miss"; } if(!ed) aCls+=" locked";
-      html+='<button class="'+hCls+'" onclick="sP('+m.id+","+JSON.stringify("H")+')" '+(ed?"":"disabled")+'>'+m.home_flag+"</button>";
-      html+='<button class="'+dCls+'" onclick="sP('+m.id+","+JSON.stringify("D")+')" '+(ed?"":"disabled")+'>E</button>';
-      html+='<button class="'+aCls+'" onclick="sP('+m.id+","+JSON.stringify("A")+')" '+(ed?"":"disabled")+'>'+m.away_flag+"</button>";
+      html+='<button class="'+hCls+'" onclick="sP('+m.id+',\'H\')" '+(ed?"":"disabled")+'>'+m.home_flag+"</button>";
+      html+='<button class="'+dCls+'" onclick="sP('+m.id+',\'D\')" '+(ed?"":"disabled")+'>E</button>';
+      html+='<button class="'+aCls+'" onclick="sP('+m.id+',\'A\')" '+(ed?"":"disabled")+'>'+m.away_flag+"</button>";
       html+="</div>";
       html+='<span class="si">'+ic+"</span></div>";
     });
@@ -613,7 +613,7 @@ function rPronos(){
     let cls="spb"+(s?" sel":"");
     if(s && cache.special.campeon) cls+=eq===cache.special.campeon?" hit":" miss";
     if(!ed) cls+=" locked";
-    cB+='<button class="'+cls+'" onclick="sSp('+JSON.stringify("campeon")+","+JSON.stringify(eq)+')" '+(ed?"":"disabled")+'>'+(FLAGS[eq]||"")+" "+eq+"</button>";
+    cB+='<button class="'+cls+'" onclick="sSp(\'campeon\',\''+eq+'\')" '+(ed?"":"disabled")+'>'+(FLAGS[eq]||"")+" "+eq+"</button>";
   });
   let rB="";
   RONDAS.forEach(function(r){
@@ -621,7 +621,7 @@ function rPronos(){
     let cls="spb"+(s?" sel-r":"");
     if(s && cache.special.ronda_mexico) cls+=r===cache.special.ronda_mexico?" hit":" miss";
     if(!ed) cls+=" locked";
-    rB+='<button class="'+cls+'" onclick="sSp('+JSON.stringify("rondaMexico")+","+JSON.stringify(r)+')" '+(ed?"":"disabled")+'>'+r+"</button>";
+    rB+='<button class="'+cls+'" onclick="sSp(\'rondaMexico\',\''+r+'\')" '+(ed?"":"disabled")+'>'+r+"</button>";
   });
 
   html+='<div class="card">';
@@ -784,11 +784,15 @@ function rAdmin(){
     uHtml+='<div><div style="font-size:13px;font-weight:600">'+u.name+'</div><div style="font-size:11px;color:#888">'+u.email+"</div></div>";
     if(u.is_admin) uHtml+='<span style="font-size:10px;background:#A8C72A;color:#2a2a7a;padding:1px 7px;border-radius:20px;font-weight:700;margin-left:auto">admin</span>';
     if(u.id!==CU.id){
-      uHtml+='<button onclick="adminDeleteUser('+JSON.stringify(u.id)+","+JSON.stringify(u.name)+')" style="margin-left:auto;padding:5px 8px;background:#fdecea;color:#c03020;border:1px solid #f09595;border-radius:6px;font-size:11px;cursor:pointer">🗑️</button>';
+    uHtml+='<button data-uid="'+u.id+'" data-uname="'+u.name.replace(/"/g,"&quot;")+'" class="del-user-btn" style="margin-left:auto;padding:5px 8px;background:#fdecea;color:#c03020;border:1px solid #f09595;border-radius:6px;font-size:11px;cursor:pointer">🗑️</button>';
     }
     uHtml+="</div>";
   });
   document.getElementById("admin-users-list").innerHTML=uHtml||'<div style="font-size:13px;color:#888;padding:1rem;text-align:center">No hay usuarios</div>';
+  document.getElementById("admin-users-list").addEventListener("click",function(e){
+    const btn=e.target.closest(".del-user-btn");
+    if(btn) adminDeleteUser(btn.dataset.uid, btn.dataset.uname);
+  });
 }
 
 async function setR(mid,val){
