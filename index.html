@@ -263,7 +263,7 @@ function enterApp(){
 }
 
 function goToPerfil(){
-  const tab=document.querySelector(".tab[onclick*="perfil"]");
+  const tab=document.querySelector('.tab[onclick*="perfil"]');
   if(tab)showTab("perfil",tab);
 }
 
@@ -330,7 +330,7 @@ function rPremios(){
   const p3r=RONDAS.map(r=>{const ns=pR[r]||[];if(!ns.length)return"";const ir=cache.special.ronda_mexico===r;return'<div class="prlist"><span style="'+(ir?"font-weight:700;color:var(--sb)":"")+'">'+(ir?'<span style="font-size:10px;background:var(--sl);color:var(--sb-dk);padding:1px 6px;border-radius:10px;font-weight:700">✓</span>':"")+r+"</span>"+'<span style="margin-left:auto">'+ns.join(", ")+"</span></div>";}).join("")||'<div style="font-size:11px;color:var(--g500);margin-top:4px">Sin pronósticos</div>';
   document.getElementById("tab-premios").innerHTML=
     '<div class="p-card p1"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:22px">🥇</span><div><div class="ptitle">Premio Mayor — Más Aciertos</div><div class="pdesc">'+pl+"/"+cache.matches.length+' partidos jugados</div></div></div>'+
-    (l1.length?'<div class="prow2">'+av(l1[0])+'<span style="font-size:13px;font-weight:600">'+l1.map(u=>u.name).join(", ")+'</span><span style="margin-left:auto;font-family:Barlow Condensed,sans-serif;font-size:14px;font-weight:700;color:var(--sl-dk)">'+mx+' aciertos</span></div>':'<div style="font-size:12px;color:var(--g500)">Sin partidos jugados aún</div>')+"</div>"+
+    (l1.length?'<div class="prow2">'+av(l1[0])+'<span style="font-size:13px;font-weight:600">'+l1.map(u=>u.name).join(", ")+'</span><span style="margin-left:auto;font-family:sans-serif;font-size:14px;font-weight:700;color:var(--sl-dk)">'+mx+' aciertos</span></div>':'<div style="font-size:12px;color:var(--g500)">Sin partidos jugados aún</div>')+"</div>"+
     '<div class="p-card p2"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:22px">🥈</span><div><div class="ptitle">Segundo Premio — Campeón</div><div class="pdesc">'+(cache.special.campeon?(FLAGS[cache.special.campeon]||"")+" "+cache.special.campeon+" es el campeón":"Aún sin definir")+"</div></div></div>"+
     p2r+(l2.length?'<div class="prow2">'+av(l2[0])+'<span style="font-size:13px;font-weight:600">'+l2.map(u=>u.name).join(", ")+'</span><span style="margin-left:auto;font-size:10px;background:var(--sb);color:#fff;padding:2px 8px;border-radius:10px;font-weight:700">¡Acertaron!</span></div>':(cache.special.campeon?'<div style="font-size:11px;color:var(--g500);margin-top:5px">Nadie acertó al campeón 😔</div>':""))+"</div>"+
     '<div class="p-card p3"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:22px">🥉</span><div><div class="ptitle">Tercer Premio — Ronda México 🇲🇽</div><div class="pdesc">'+(cache.special.ronda_mexico?"México llegó a: "+cache.special.ronda_mexico:"Aún sin definir")+"</div></div></div>"+
@@ -422,7 +422,7 @@ function rPerfil(){
   const s=stats(CU.id);
   document.getElementById("tab-perfil").innerHTML=
     '<div class="card" style="text-align:center;padding:1.5rem 1.25rem">'+
-    '<div style="width:60px;height:60px;border-radius:50%;background:var(--sb);color:#fff;display:flex;align-items:center;justify-content:center;font-family:Barlow Condensed,sans-serif;font-size:22px;font-weight:800;margin:0 auto 10px">'+CU.name.split(" ").map(n=>n[0]).slice(0,2).join("")+'</div>'+
+    '<div style="width:60px;height:60px;border-radius:50%;background:var(--sb);color:#fff;display:flex;align-items:center;justify-content:center;font-family:sans-serif;font-size:22px;font-weight:800;margin:0 auto 10px">'+CU.name.split(" ").map(n=>n[0]).slice(0,2).join("")+'</div>'+
     '<div style="font-size:18px;font-weight:600;color:var(--tx)">'+CU.name+'</div>'+
     '<div style="font-size:12px;color:var(--g500);margin-top:3px">'+CU.email+'</div>'+
     (CU.isAdmin?'<span style="font-size:11px;background:var(--sl);color:var(--sb-dk);padding:2px 10px;border-radius:20px;font-weight:700;display:inline-block;margin-top:6px">Administrador</span>':"")+"</div>"+
@@ -436,7 +436,7 @@ function rPerfil(){
     '<div class="met"><div class="mv">'+myPronos.length+'</div><div class="ml">Pronós.</div></div>'+
     '<div class="met"><div class="mv">'+(locked?"🔒":"⏳")+'</div><div class="ml">'+(locked?"Bloq.":"Pend.")+'</div></div></div>'+
     '<div style="font-size:12px;color:var(--g500);margin-top:6px">Campeón: <strong style="color:var(--tx)">'+(sp.campeon||"Sin registrar")+'</strong><br>México: <strong style="color:var(--tx)">'+(sp.ronda_mexico||"Sin registrar")+"</strong></div></div>"+
-    '<button onclick="doLogout()" style="width:100%;padding:11px;background:none;border:1px solid var(--g100);border-radius:var(--r);font-family:Barlow,sans-serif;font-size:13px;color:var(--g500);cursor:pointer;margin-top:4px">Cerrar sesión</button>';
+    '<button onclick="doLogout()" style="width:100%;padding:11px;background:none;border:1px solid var(--g100);border-radius:var(--r);font-family:sans-serif;font-size:13px;color:var(--g500);cursor:pointer;margin-top:4px">Cerrar sesión</button>';
 }
 
 async function saveName(){
@@ -491,7 +491,7 @@ function rAdmin(){
     RONDAS.map(r=>'<option value="'+r+'" '+(cache.special.ronda_mexico===r?"selected":"")+'>'+r+"</option>").join("")+"</select></div>"+
     '<div class="card" style="border-left:3px solid var(--sl)"><div class="ctitle">🔄 Sincronización automática</div>'+
     '<div style="font-size:12px;color:var(--g500);line-height:1.6">Los resultados se sincronizan cada 5 min desde <strong>worldcup26.ir</strong>.</div>'+
-    '<button onclick="trigSync()" style="margin-top:8px;padding:8px 14px;background:none;border:1px solid var(--sl);color:var(--sl-dk);border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:Barlow,sans-serif">↻ Sincronizar ahora</button></div>'+
+    '<button onclick="trigSync()" style="margin-top:8px;padding:8px 14px;background:none;border:1px solid var(--sl);color:var(--sl-dk);border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:sans-serif">↻ Sincronizar ahora</button></div>'+
     '<div class="card"><div class="ctitle">👥 Gestión de usuarios</div><div id="admin-users-list"></div></div>';
   document.getElementById("tab-admin").innerHTML=h;
   document.getElementById("admin-users-list").innerHTML=cache.users.map(u=>'<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--g100)">'+av(u)+'<div><div style="font-size:13px;font-weight:600">'+u.name+'</div><div style="font-size:11px;color:var(--g500)">'+u.email+"</div></div>"+(u.is_admin?'<span style="font-size:10px;background:var(--sl);color:var(--sb-dk);padding:1px 7px;border-radius:20px;font-weight:700;margin-left:auto">admin</span>':"")+'<button onclick="adminEditUser(''+u.id+'')" style="margin-left:auto;padding:5px 8px;background:var(--sb);color:#fff;border:none;border-radius:6px;font-size:11px;cursor:pointer">✏️</button>'+(u.id!==CU.id?'<button onclick="adminDeleteUser(''+u.id+'',''+u.name.replace(/'/g,"\'")+'''+')" style="padding:5px 8px;background:#fdecea;color:var(--sr-dk);border:1px solid #f09595;border-radius:6px;font-size:11px;cursor:pointer">🗑️</button>':"")+"</div>").join("");
@@ -539,7 +539,7 @@ function adminEditUser(uid){
   modal.id="adm-modal";
   modal.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;overflow-y:auto;padding:1rem";
   modal.innerHTML='<div style="background:#fff;border-radius:var(--rl);max-width:440px;margin:0 auto;overflow:hidden">'+
-    '<div style="background:var(--sb);padding:14px 16px;display:flex;align-items:center;justify-content:space-between"><span style="font-family:Barlow Condensed,sans-serif;font-size:16px;font-weight:700;color:#fff;text-transform:uppercase">Editar: '+u.name+'</span><button onclick="closeAdmModal()" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer">×</button></div>'+
+    '<div style="background:var(--sb);padding:14px 16px;display:flex;align-items:center;justify-content:space-between"><span style="font-family:sans-serif;font-size:16px;font-weight:700;color:#fff;text-transform:uppercase">Editar: '+u.name+'</span><button onclick="closeAdmModal()" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer">×</button></div>'+
     '<div style="padding:14px">'+
     '<div class="ctitle">Nombre</div><input type="text" id="adm-name-'+uid+'" value="'+u.name+'" style="margin-bottom:4px"><button onclick="admSaveName(''+uid+'')" class="btn-p" style="margin-bottom:14px">Guardar nombre</button>'+
     '<div class="ctitle">Pronósticos de partidos</div><div style="font-size:11px;color:var(--g500);margin-bottom:6px">Toca para cambiar · Toca de nuevo para borrar</div>'+pronosHtml+
