@@ -181,10 +181,35 @@ input[type=password]:focus{border-color:#3D3D9E}
 <script>
 
 const DOMAIN="sisol.com.mx";
-const DL=new Date("2026-06-11T23:59:59");
+const DL=new Date("2026-06-11T13:00:00-05:00"); // 1pm hora México, antes del partido inaugural
 const RONDAS=["Fase de grupos","Octavos","Cuartos","Semifinal","Final","Campeón"];
-const EQUIPOS=["México","EUA","Canadá","Brasil","Argentina","Francia","Alemania","España","Portugal","Bélgica","Japón","Holanda","Inglaterra","Corea del Sur","Croacia","Marruecos","Colombia","Polonia","Uruguay","Suiza","Australia","Turquía","Senegal","Noruega","Austria"];
-const FLAGS={México:"🇲🇽",EUA:"🇺🇸",Canadá:"🇨🇦",Brasil:"🇧🇷",Argentina:"🇦🇷",Francia:"🇫🇷",Alemania:"🇩🇪",España:"🇪🇸",Portugal:"🇵🇹",Bélgica:"🇧🇪",Japón:"🇯🇵",Holanda:"🇳🇱",Inglaterra:"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Corea del Sur":"🇰🇷",Croacia:"🇭🇷",Marruecos:"🇲🇦",Colombia:"🇨🇴",Polonia:"🇵🇱",Uruguay:"🇺🇾",Suiza:"🇨🇭",Australia:"🇦🇺",Turquía:"🇹🇷",Senegal:"🇸🇳",Noruega:"🇳🇴",Austria:"🇦🇹"};
+const EQUIPOS=[
+  "México","Sudáfrica","Corea del Sur","Rep. Checa",
+  "Canadá","Bosnia","Qatar","Suiza",
+  "Brasil","Marruecos","Haití","Escocia",
+  "EUA","Paraguay","Australia","Turquía",
+  "Alemania","Curazao","Costa de Marfil","Ecuador",
+  "Holanda","Túnez","Suecia","Japón",
+  "Bélgica","Egipto","Irán","Nueva Zelanda",
+  "España","Cabo Verde","Arabia Saudita","Uruguay",
+  "Francia","Senegal","Irak","Noruega",
+  "Argentina","Argelia","Austria","Jordania",
+  "Portugal","Congo DR","Uzbekistán","Colombia",
+  "Inglaterra","Croacia","Ghana","Panamá"
+];
+const FLAGS={
+  México:"🇲🇽",EUA:"🇺🇸",Canadá:"🇨🇦",Brasil:"🇧🇷",Argentina:"🇦🇷",
+  Francia:"🇫🇷",Alemania:"🇩🇪",España:"🇪🇸",Portugal:"🇵🇹",Bélgica:"🇧🇪",
+  Japón:"🇯🇵",Holanda:"🇳🇱",Inglaterra:"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Corea del Sur":"🇰🇷",Croacia:"🇭🇷",
+  Marruecos:"🇲🇦",Colombia:"🇨🇴",Polonia:"🇵🇱",Uruguay:"🇺🇾",Suiza:"🇨🇭",
+  Australia:"🇦🇺",Turquía:"🇹🇷",Senegal:"🇸🇳",Noruega:"🇳🇴",Austria:"🇦🇹",
+  Sudáfrica:"🇿🇦","Rep. Checa":"🇨🇿",Bosnia:"🇧🇦",Qatar:"🇶🇦",
+  Haití:"🇭🇹",Escocia:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",Paraguay:"🇵🇾",Australia:"🇦🇺",
+  Curazao:"🇨🇼","Costa de Marfil":"🇨🇮",Ecuador:"🇪🇨",Túnez:"🇹🇳",
+  Suecia:"🇸🇪",Egipto:"🇪🇬",Irán:"🇮🇷","Nueva Zelanda":"🇳🇿",
+  "Cabo Verde":"🇨🇻","Arabia Saudita":"🇸🇦",Irak:"🇮🇶",Argelia:"🇩🇿",
+  Jordania:"🇯🇴","Congo DR":"🇨🇩",Uzbekistán:"🇺🇿",Ghana:"🇬🇭",Panamá:"🇵🇦"
+};
 
 let SB=null, CU=null;
 let cache={users:[],matches:[],pronos:[],special:{},spUsers:{}};
