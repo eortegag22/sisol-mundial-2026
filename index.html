@@ -692,9 +692,9 @@ function rAdmin(){
       html+='<div style="display:flex;align-items:center;gap:5px">';
       html+='<div class="tb"><span class="fl">'+m.home_flag+'</span><span class="tn">'+m.home_name+"</span></div>";
       html+='<div class="rbtns">';
-      html+='<button class="rb '+(m.result==="H"?"sH":"")+'" onclick="setR('+m.id+","+'H')">''+m.home_flag+"</button>";
-      html+='<button class="rb '+(m.result==="D"?"sD":"")+'" onclick="setR('+m.id+","+'D')">'E</button>';
-      html+='<button class="rb '+(m.result==="A"?"sA":"")+'" onclick="setR('+m.id+","+'A')">''+m.away_flag+"</button>";
+      html+='<button class="rb '+(m.result==="H"?"sH":"")+'" data-mid="'+m.id+'" data-val="H">'+m.home_flag+"</button>";
+      html+='<button class="rb '+(m.result==="D"?"sD":"")+'" data-mid="'+m.id+'" data-val="D">E</button>';
+      html+='<button class="rb '+(m.result==="A"?"sA":"")+'" data-mid="'+m.id+'" data-val="A">'+m.away_flag+"</button>";
       html+="</div>";
       html+='<div class="tb aw"><span class="tn">'+m.away_name+'</span><span class="fl">'+m.away_flag+"</span></div>";
       html+="</div></div>";
@@ -720,6 +720,10 @@ function rAdmin(){
 
   html+='<div class="card"><div class="ctitle">👥 Gestión de usuarios</div><div id="admin-users-list"></div></div>';
   document.getElementById("tab-admin").innerHTML=html;
+  document.getElementById("tab-admin").addEventListener("click",function(e){
+    const btn=e.target.closest("[data-mid][data-val]");
+    if(btn) setR(parseInt(btn.dataset.mid), btn.dataset.val);
+  });
 
   // Fill users
   let uHtml="";
