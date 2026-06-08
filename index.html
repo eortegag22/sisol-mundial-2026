@@ -191,7 +191,7 @@ function fmtDate(d){
 
 function validateEmailInput(){
   const v=document.getElementById("inp-email").value.trim().toLowerCase();
-  const ok=v.endsWith("@"+ALLOWED_DOMAIN)&&v.length>ALLOWED_DOMAIN.length+1;
+  const ok=v.endsWith("@"+ALLOWED_DOMAIN)&&v.indexOf("@")>0;
   document.getElementById("btn-send").disabled=!ok;
   document.getElementById("err-email").style.display=(!ok&&v.length>3)?"block":"none";
 }
