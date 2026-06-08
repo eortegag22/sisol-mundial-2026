@@ -553,12 +553,38 @@ function rRanking(){
     }).join("")}</tbody></table></div>`;
 }
 
+function fmtDate(d){
+  if(!d)return"";
+  const dt=new Date(d);
+  const days=["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+  const months=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+  return`${days[dt.getDay()]} ${dt.getDate()} ${months[dt.getMonth()]} · ${dt.getHours().toString().padStart(2,"0")}:${dt.getMinutes().toString().padStart(2,"0")}`;
+}
+
 function rPartidos(){
   const g={};cache.matches.forEach(m=>{if(!g[m.grp])g[m.grp]=[];g[m.grp].push(m);});
   let h="";
   Object.entries(g).forEach(([gr,ms])=>{
     h+=`<div class="glbl">${gr}</div><div class="card">`;
-    ms.forEach(m=>{h+=`<div class="mrow"><div class="tb"><span class="fl">${m.home_flag}</span><span class="tn">${m.home_name}</span></div><div class="rbtns"><button class="rb ${m.result==="H"?"sH":""}" disabled>${m.home_name.split(" ")[0]}</button><button class="rb ${m.result==="D"?"sD":""}" disabled>Emp</button><button class="rb ${m.result==="A"?"sA":""}" disabled>${m.away_name.split(" ")[0]}</button></div><div class="tb aw"><span class="tn">${m.away_name}</span><span class="fl">${m.away_flag}</span></div></div>`;});
+    ms.forEach(m=>{
+      const dateStr=m.match_date?`<div style="font-size:10px;color:var(--g500);margin-bottom:4px;text-align:center">${fmtDate(m.match_date)}</div>`:"";
+      const resTag=m.result?`<span style="font-size:9px;padding:1px 6px;border-radius:10px;background:${m.result==="H"?"var(--sl)":m.result==="A"?"var(--sr)":"var(--sb)"};color:#fff;font-weight:700;margin-left:4px">${m.result==="H"?m.home_name.split(" ")[0]:m.result==="A"?m.away_name.split(" ")[0]:"Empate"}</span>`:"";
+      h+=`<div class="mrow" style="flex-direction:column;align-items:stretch;padding:10px 0">
+        ${dateStr}
+        <div style="display:flex;align-items:center;gap:5px">
+          <div class="tb"><span class="fl">${m.home_flag}</span><span class="tn" style="font-weight:600">${m.home_name}</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0">
+            <div style="display:flex;gap:2px">
+              <span style="font-size:9px;padding:2px 5px;border:0.5px solid var(--g100);border-radius:4px;background:${m.result==="H"?"var(--sl)":m.result==="D"?"var(--sb)":"var(--g50)"};color:${m.result==="H"?"var(--sb-dk)":m.result==="D"?"#fff":"var(--g500)"}">L</span>
+              <span style="font-size:9px;padding:2px 5px;border:0.5px solid var(--g100);border-radius:4px;background:${m.result==="D"?"var(--sb)":"var(--g50)"};color:${m.result==="D"?"#fff":"var(--g500)"}">E</span>
+              <span style="font-size:9px;padding:2px 5px;border:0.5px solid var(--g100);border-radius:4px;background:${m.result==="A"?"var(--sr)":"var(--g50)"};color:${m.result==="A"?"#fff":"var(--g500)"}">V</span>
+            </div>
+            ${m.result?`<span style="font-size:9px;color:var(--g500)">Final</span>`:`<span style="font-size:9px;color:var(--g500)">vs</span>`}
+          </div>
+          <div class="tb aw"><span class="tn" style="font-weight:600">${m.away_name}</span><span class="fl">${m.away_flag}</span></div>
+        </div>
+      </div>`;
+    });
     h+="</div>";
   });
   document.getElementById("tab-partidos").innerHTML=h;
@@ -579,7 +605,23 @@ function rPronos(){
       const p=tP[m.id];const r=m.result;
       const ic=!p?"—":(!r?"⏳":(p===r?"✅":"❌"));
       const bc=v=>{let c="pb";if(p===v)c+=" s"+v;if(p===v&&r)c+=p===r?" hit":" miss";if(!ed)c+=" locked";return c;};
-      h+=`<div class="prowp"><div class="pterms">${m.home_flag} ${m.home_name} <span style="color:var(--g300)">vs</span> ${m.away_name} ${m.away_flag}</div><div class="pbtns"><button class="${bc("H")}" onclick="sP(${m.id},'H')" ${!ed?"disabled":""}>${m.home_name.split(" ")[0]}</button><button class="${bc("D")}" onclick="sP(${m.id},'D')" ${!ed?"disabled":""}>Emp</button><button class="${bc("A")}" onclick="sP(${m.id},'A')" ${!ed?"disabled":""}>${m.away_name.split(" ")[0]}</button></div><span class="si">${ic}</span></div>`;
+      const dateStr2=m.match_date?`<span style="font-size:9px;color:var(--g500);margin-left:4px">${fmtDate(m.match_date)}</span>`:"";
+      h+=`<div class="prowp">
+        <div class="pterms">
+          <div style="display:flex;align-items:center;gap:3px;flex-wrap:wrap">
+            <span>${m.home_flag}</span><span style="font-weight:600">${m.home_name}</span>
+            <span style="color:var(--g300);font-size:10px">vs</span>
+            <span style="font-weight:600">${m.away_name}</span><span>${m.away_flag}</span>
+            ${dateStr2}
+          </div>
+        </div>
+        <div class="pbtns">
+          <button class="${bc("H")}" onclick="sP(${m.id},'H')" ${!ed?"disabled":""}>${m.home_flag}</button>
+          <button class="${bc("D")}" onclick="sP(${m.id},'D')" ${!ed?"disabled":""}>E</button>
+          <button class="${bc("A")}" onclick="sP(${m.id},'A')" ${!ed?"disabled":""}>${m.away_flag}</button>
+        </div>
+        <span class="si">${ic}</span>
+      </div>`;
     });
     h+="</div>";
   });
@@ -691,7 +733,20 @@ function rAdmin(){
   let h='<div class="card"><div class="ctitle">Resultados de Partidos</div>';
   Object.entries(g).forEach(([gr,ms])=>{
     h+=`<div class="glbl">${gr}</div>`;
-    ms.forEach(m=>{h+=`<div class="mrow"><div class="tb"><span class="fl">${m.home_flag}</span><span class="tn">${m.home_name}</span></div><div class="rbtns"><button class="rb ${m.result==="H"?"sH":""}" onclick="setR(${m.id},'H')">${m.home_name.split(" ")[0]}</button><button class="rb ${m.result==="D"?"sD":""}" onclick="setR(${m.id},'D')">Emp</button><button class="rb ${m.result==="A"?"sA":""}" onclick="setR(${m.id},'A')">${m.away_name.split(" ")[0]}</button></div><div class="tb aw"><span class="tn">${m.away_name}</span><span class="fl">${m.away_flag}</span></div></div>`;});
+    ms.forEach(m=>{
+      const ds=m.match_date?`<span style="font-size:9px;color:var(--g500);display:block;margin-bottom:3px">${fmtDate(m.match_date)}</span>`:"";
+      h+=`<div class="mrow" style="flex-direction:column;align-items:stretch;padding:8px 0">
+        ${ds}
+        <div style="display:flex;align-items:center;gap:5px">
+          <div class="tb"><span class="fl">${m.home_flag}</span><span class="tn">${m.home_name}</span></div>
+          <div class="rbtns">
+            <button class="rb ${m.result==="H"?"sH":""}" onclick="setR(${m.id},'H')">${m.home_flag}</button>
+            <button class="rb ${m.result==="D"?"sD":""}" onclick="setR(${m.id},'D')">E</button>
+            <button class="rb ${m.result==="A"?"sA":""}" onclick="setR(${m.id},'A')">${m.away_flag}</button>
+          </div>
+          <div class="tb aw"><span class="tn">${m.away_name}</span><span class="fl">${m.away_flag}</span></div>
+        </div>
+      </div>`;});
   });
   h+=`</div><div class="card"><div class="ctitle">Resultados Especiales</div>
   <div class="s-lbl" style="margin-top:4px">🏆 Campeón del Mundial</div>
