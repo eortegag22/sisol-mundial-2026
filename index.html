@@ -528,31 +528,84 @@ function rRanking(){
   document.getElementById("tab-ranking").innerHTML=html;
 }
 
+var partidosView="calendario";
+function setPartidosView(v){ partidosView=v; rPartidos(); }
+
 function rPartidos(){
-  const g={};
-  cache.matches.forEach(function(m){
-    if(!g[m.grp]) g[m.grp]=[];
-    g[m.grp].push(m);
-  });
-  let html="";
-  Object.keys(g).forEach(function(gr){
-    html+='<div class="glbl">'+gr+'</div><div class="card">';
-    g[gr].forEach(function(m){
-      const ds=m.match_date ? '<div style="font-size:10px;color:#888;text-align:center;margin-bottom:4px">'+fmtDate(m.match_date)+"</div>" : "";
-      let res="Pendiente";
-      if(m.result==="H") res=m.home_name+" ✓";
-      else if(m.result==="D") res="Empate";
-      else if(m.result==="A") res=m.away_name+" ✓";
-      const resCls=m.result ? (m.result==="H"?"sH":m.result==="D"?"sD":"sA") : "";
-      html+='<div class="mrow" style="flex-direction:column;align-items:stretch;padding:10px 0">'+ds;
-      html+='<div style="display:flex;align-items:center;gap:5px">';
-      html+='<div class="tb"><span class="fl">'+m.home_flag+'</span><span class="tn" style="font-weight:600">'+m.home_name+"</span></div>";
-      html+='<div class="rbtns"><button class="rb '+resCls+'" disabled style="min-width:65px;font-size:10px">'+res+"</button></div>";
-      html+='<div class="tb aw"><span class="tn" style="font-weight:600">'+m.away_name+'</span><span class="fl">'+m.away_flag+"</span></div>";
+  // Toggle buttons
+  let html='<div style="display:flex;gap:6px;margin-bottom:10px">';
+  html+='<button onclick="setPartidosView(\'calendario\')" style="flex:1;padding:8px;border:1px solid '+(partidosView==="calendario"?"#3D3D9E":"#e8e8e2")+';border-radius:8px;background:'+(partidosView==="calendario"?"#3D3D9E":"none")+';color:'+(partidosView==="calendario"?"#fff":"#888")+';font-size:12px;font-weight:600;cursor:pointer">📅 Calendario</button>';
+  html+='<button onclick="setPartidosView(\'grupos\')" style="flex:1;padding:8px;border:1px solid '+(partidosView==="grupos"?"#3D3D9E":"#e8e8e2")+';border-radius:8px;background:'+(partidosView==="grupos"?"#3D3D9E":"none")+';color:'+(partidosView==="grupos"?"#fff":"#888")+';font-size:12px;font-weight:600;cursor:pointer">🏟️ Por grupos</button>';
+  html+="</div>";
+
+  if(partidosView==="calendario"){
+    // Group by date
+    const byDate={};
+    const sorted=[...cache.matches].sort(function(a,b){
+      if(!a.match_date) return 1;
+      if(!b.match_date) return -1;
+      return new Date(a.match_date)-new Date(b.match_date);
+    });
+    sorted.forEach(function(m){
+      const dt=m.match_date ? new Date(m.match_date) : null;
+      const days=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+      const months=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+      const key=dt ? days[dt.getDay()]+" "+dt.getDate()+" de "+months[dt.getMonth()]+" "+dt.getFullYear() : "Sin fecha";
+      if(!byDate[key]) byDate[key]=[];
+      byDate[key].push(m);
+    });
+    Object.keys(byDate).forEach(function(day){
+      const ms=byDate[day];
+      const playedCount=ms.filter(function(m){return m.result;}).length;
+      html+='<div style="margin-bottom:12px">';
+      html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
+      html+='<div style="background:#3D3D9E;color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700">'+day+"</div>";
+      if(playedCount>0) html+='<span style="font-size:11px;background:#A8C72A;color:#2a2a7a;padding:2px 8px;border-radius:20px;font-weight:600">'+playedCount+"/"+ms.length+" jugados</span>";
+      html+="</div>";
+      html+='<div class="card" style="margin-bottom:0">';
+      ms.forEach(function(m){
+        const timeStr=m.match_date ? String(new Date(m.match_date).getHours()).padStart(2,"0")+":"+String(new Date(m.match_date).getMinutes()).padStart(2,"0")+" hrs" : "";
+        let res="Pendiente";
+        let resCls="";
+        if(m.result==="H"){res=m.home_name+" ✓";resCls="sH";}
+        else if(m.result==="D"){res="Empate";resCls="sD";}
+        else if(m.result==="A"){res=m.away_name+" ✓";resCls="sA";}
+        html+='<div class="mrow" style="padding:8px 0">';
+        html+='<div style="width:44px;text-align:center;flex-shrink:0"><span style="font-size:11px;color:#888;font-weight:600">'+timeStr+"</span></div>";
+        html+='<div class="tb"><span class="fl">'+m.home_flag+'</span><span class="tn" style="font-weight:600">'+m.home_name+"</span></div>";
+        html+='<div class="rbtns"><button class="rb '+resCls+'" disabled style="min-width:65px;font-size:10px">'+res+"</button></div>";
+        html+='<div class="tb aw"><span class="tn" style="font-weight:600">'+m.away_name+'</span><span class="fl">'+m.away_flag+"</span></div>";
+        html+='<div style="width:40px;text-align:right;flex-shrink:0"><span style="font-size:9px;color:#aaa">'+m.grp+"</span></div>";
+        html+="</div>";
+      });
       html+="</div></div>";
     });
-    html+="</div>";
-  });
+  } else {
+    // Group view (original)
+    const g={};
+    cache.matches.forEach(function(m){
+      if(!g[m.grp]) g[m.grp]=[];
+      g[m.grp].push(m);
+    });
+    Object.keys(g).forEach(function(gr){
+      html+='<div class="glbl">'+gr+'</div><div class="card">';
+      g[gr].forEach(function(m){
+        const ds=m.match_date ? '<div style="font-size:10px;color:#888;text-align:center;margin-bottom:4px">'+fmtDate(m.match_date)+"</div>" : "";
+        let res="Pendiente";
+        let resCls="";
+        if(m.result==="H"){res=m.home_name+" ✓";resCls="sH";}
+        else if(m.result==="D"){res="Empate";resCls="sD";}
+        else if(m.result==="A"){res=m.away_name+" ✓";resCls="sA";}
+        html+='<div class="mrow" style="flex-direction:column;align-items:stretch;padding:10px 0">'+ds;
+        html+='<div style="display:flex;align-items:center;gap:5px">';
+        html+='<div class="tb"><span class="fl">'+m.home_flag+'</span><span class="tn" style="font-weight:600">'+m.home_name+"</span></div>";
+        html+='<div class="rbtns"><button class="rb '+resCls+'" disabled style="min-width:65px;font-size:10px">'+res+"</button></div>";
+        html+='<div class="tb aw"><span class="tn" style="font-weight:600">'+m.away_name+'</span><span class="fl">'+m.away_flag+"</span></div>";
+        html+="</div></div>";
+      });
+      html+="</div>";
+    });
+  }
   document.getElementById("tab-partidos").innerHTML=html||'<div style="padding:2rem;text-align:center;color:#888">Sin partidos cargados</div>';
 }
 
