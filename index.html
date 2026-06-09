@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Sisol Mundial 2026</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--sb:#3D3D9E;--sb-dk:#2a2a7a;--sl:#A8C72A;--sl-dk:#7a9310;--sr:#E8503A;--sr-dk:#c03020;--g50:#f4f4f0;--g100:#e8e8e2;--g500:#888880;--tx:#1a1a18;--r:10px;--rl:14px}
@@ -97,6 +98,23 @@ input:focus{border-color:#3D3D9E}
 .spsec{border-top:1px solid #e8e8e2;margin-top:10px;padding-top:10px}
 .sv-btn{width:100%;padding:13px;background:#A8C72A;color:#2a2a7a;border:none;border-radius:10px;font-size:16px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-top:10px;font-family:"Barlow Condensed",sans-serif}
 .sv-note{font-size:11px;color:#888;text-align:center;margin-top:6px}
+
+/* ── ANIMACIONES ── */
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cascadeIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes popBtn{0%{transform:scale(1)}40%{transform:scale(1.14)}70%{transform:scale(.96)}100%{transform:scale(1)}}
+@keyframes checkBounce{0%{transform:scale(0) rotate(-20deg);opacity:0}60%{transform:scale(1.2) rotate(5deg);opacity:1}80%{transform:scale(.92)}100%{transform:scale(1)}}
+@keyframes spinSlow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes countUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.tab-content-enter{animation:fadeSlideUp .22s ease both}
+.cascade-card{animation:cascadeIn .3s ease both}
+.pb.pop{animation:popBtn .25s ease}
+.spb.pop{animation:popBtn .25s ease}
+.sv-btn.checking{animation:none}
+.check-anim{animation:checkBounce .5s cubic-bezier(.34,1.56,.64,1) both}
+.hex-spin{animation:spinSlow 60s linear infinite;transform-origin:center}
+.count-num{animation:countUp .4s ease both}
 input[type=password]{width:100%;padding:11px 12px;font-size:14px;font-family:"Barlow",sans-serif;border:1px solid #e8e8e2;border-radius:10px;background:#f8f8f6;color:#1a1a18;margin-bottom:10px;outline:none}
 input[type=password]:focus{border-color:#3D3D9E}
 .adm-sel{width:100%;padding:9px 11px;font-size:13px;border:1px solid #e8e8e2;border-radius:10px;background:#f8f8f6;color:#1a1a18;margin-top:5px;outline:none}
@@ -184,7 +202,7 @@ input[type=password]:focus{border-color:#3D3D9E}
   <div style="display:flex;height:64px;overflow:hidden">
     <div style="width:8px;background:#E8503A;flex-shrink:0"></div>
     <div style="flex:1;background:#3D3D9E;display:flex;align-items:center;padding:0 12px;gap:10px;position:relative;overflow:hidden">
-      <svg style="position:absolute;right:0;top:0;width:200px;height:64px;opacity:.07;pointer-events:none" viewBox="0 0 200 64">
+      <svg class="hex-spin" style="position:absolute;right:0;top:0;width:200px;height:64px;opacity:.07;pointer-events:none" viewBox="0 0 200 64">
         <polygon points="20,2 38,2 47,18 38,34 20,34 11,18" fill="none" stroke="white" stroke-width="1.5"/>
         <polygon points="54,2 72,2 81,18 72,34 54,34 45,18" fill="none" stroke="white" stroke-width="1.5"/>
         <polygon points="88,2 106,2 115,18 106,34 88,34 79,18" fill="none" stroke="white" stroke-width="1.5"/>
@@ -232,6 +250,9 @@ input[type=password]:focus{border-color:#3D3D9E}
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+
+
+
 
 
 
@@ -481,7 +502,11 @@ function showTab(t,el){
   document.querySelectorAll(".tab").forEach(function(x){ x.classList.remove("active"); });
   document.querySelectorAll("#app .content > div").forEach(function(x){ x.style.display="none"; });
   el.classList.add("active");
-  document.getElementById("tab-"+t).style.display="block";
+  var div=document.getElementById("tab-"+t);
+  div.style.display="block";
+  div.classList.remove("tab-content-enter");
+  void div.offsetWidth;
+  div.classList.add("tab-content-enter");
   renderTab(t);
 }
 
@@ -540,10 +565,9 @@ function rPremios(){
   if(!p3r) p3r='<div style="font-size:11px;color:#888;margin-top:4px">Sin pronósticos</div>';
 
   let html='<div style="display:flex;align-items:flex-start;gap:8px;background:#eeeef8;border-radius:10px;padding:10px 12px;margin-bottom:10px"><i class=\"ti ti-info-circle\" style=\"font-size:16px;color:#3D3D9E;flex-shrink:0;margin-top:1px\" aria-hidden=\"true\"></i><span style=\"font-size:12px;color:#3D3D9E;line-height:1.5\">Aquí verás quién va ganando cada uno de los 3 premios en tiempo real.</span></div>';
-  html+='<div class="p-card p1">';
+  html+='<div class="p-card p1 cascade-card" style="animation-delay:.05s">';
   html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
-  html+='<span style="font-size:22px">🥇</span>';
-  html+='<div><div class="ptitle">Premio Mayor — Más Aciertos</div>';
+  html+='<div style="width:44px;height:44px;background:#A8C72A;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">';html+='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2a2a7a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">';html+='<path d="M6 9H4a2 2 0 0 1-2-2V5h4"/>';html+='<path d="M18 9h2a2 2 0 0 0 2-2V5h-4"/>';html+='<path d="M12 17c-3.3 0-6-2.7-6-6V5h12v6c0 3.3-2.7 6-6 6z"/>';html+='<line x1="8" y1="21" x2="16" y2="21"/>';html+='<line x1="12" y1="17" x2="12" y2="21"/>';html+='<circle cx="12" cy="10" r="2"/>';html+='</svg></div>';html+='<div><div class="ptitle">Premio Mayor — Más Aciertos</div>';
   html+='<div class="pdesc">'+pl+"/"+cache.matches.length+" partidos jugados</div></div></div>";
   if(l1.length){
     html+='<div class="prow2">'+mkAv(l1[0]);
@@ -554,7 +578,7 @@ function rPremios(){
   }
   html+="</div>";
 
-  html+='<div class="p-card p2">';
+  html+='<div class="p-card p2 cascade-card" style="animation-delay:.15s">';
   html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
   html+='<span style="font-size:22px">🥈</span>';
   html+='<div><div class="ptitle">Segundo Premio — Campeón</div>';
@@ -570,7 +594,7 @@ function rPremios(){
   }
   html+="</div>";
 
-  html+='<div class="p-card p3">';
+  html+='<div class="p-card p3 cascade-card" style="animation-delay:.25s">';
   html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
   html+='<span style="font-size:22px">🥉</span>';
   html+='<div><div class="ptitle">Tercer Premio — Ronda México 🇲🇽</div>';
@@ -619,7 +643,7 @@ function rRanking(){
     html+='<tr class="'+cls+'">';
     html+="<td>"+(md[i]||(i+1))+"</td>";
     html+='<td style="font-weight:600">'+u.name+youTag+"</td>";
-    html+='<td><span class="sc">'+u.ac+"</span></td>";
+    html+='<td><span class="sc count-num" style="animation-delay:'+(i*0.07)+'s">'+u.ac+"</span></td>";
     html+='<td style="font-size:11px">'+c+"</td>";
     html+='<td style="font-size:11px">'+r+"</td>";
     html+="</tr>";
@@ -796,10 +820,26 @@ function rPronos(){
 function sP(mid,val){
   if(tP[mid]===val) delete tP[mid]; else tP[mid]=val;
   rPronos();
+  setTimeout(function(){
+    var btns=document.querySelectorAll(".pb.s"+val);
+    btns.forEach(function(b){
+      if(b.closest("[data-mid='"+mid+"']") || b.onclick && b.onclick.toString().includes(mid)){
+        b.classList.add("pop");
+        setTimeout(function(){ b.classList.remove("pop"); }, 260);
+      }
+    });
+  }, 10);
 }
 function sSp(k,v){
   if(tS[k]===v) tS[k]=""; else tS[k]=v;
   rPronos();
+  setTimeout(function(){
+    var btns=document.querySelectorAll(".spb.sel, .spb.sel-r");
+    btns.forEach(function(b){
+      b.classList.add("pop");
+      setTimeout(function(){ b.classList.remove("pop"); }, 260);
+    });
+  }, 10);
 }
 
 async function savePronos(){
@@ -813,6 +853,11 @@ async function savePronos(){
   if(rows.length) await SB.from("quinela_pronosticos").upsert(rows,{onConflict:"user_id,match_id"});
   await SB.from("quinela_special_user").upsert({user_id:CU.id, campeon:tS.campeon||null, ronda_mexico:tS.rondaMexico||null, locked:true},{onConflict:"user_id"});
   await loadAll();
+  var svBtn=document.querySelector(".sv-btn");
+  if(svBtn){
+    svBtn.innerHTML='<span class="check-anim" style="display:inline-block;font-size:20px">✅</span> ¡Pronósticos confirmados!';
+    svBtn.style.background="#0F6E56";
+  }
   toast("Pronósticos confirmados 🔒");
 }
 
@@ -1047,6 +1092,9 @@ function toast(msg){
   });
   showScreen("login");
 })();
+
+
+
 
 
 
