@@ -36,9 +36,12 @@ input:focus{border-color:#3D3D9E}
 #app{display:none;max-width:480px;margin:0 auto;min-height:100vh;background:#f4f4f0}
 .tabs{display:flex;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
-.tab{padding:7px 8px;font-size:9px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;cursor:pointer;border:none;background:none;color:rgba(255,255,255,.4);border-bottom:3px solid transparent;white-space:nowrap;flex-shrink:0;font-family:"Barlow Condensed",sans-serif;display:flex;flex-direction:column;align-items:center;gap:2px;flex:1}
-.tab i{font-size:14px}
-.tab.active{color:#A8C72A;border-bottom-color:#A8C72A}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;gap:3px;border:none;background:none;color:rgba(255,255,255,.35);cursor:pointer;border-radius:10px;font-family:"Barlow Condensed",sans-serif;transition:background .15s}
+.tab i{font-size:20px}
+.tab span{font-size:10px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;line-height:1}
+.tab.active{background:#A8C72A;color:#2a2a7a}
+.tab.active i{color:#2a2a7a}
+.tab.active span{color:#2a2a7a}
 .content{padding:12px}
 .card{background:#fff;border:1px solid #e8e8e2;border-radius:14px;padding:14px;margin-bottom:10px}
 .ctitle{font-size:14px;font-weight:700;color:#3D3D9E;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;font-family:"Barlow Condensed",sans-serif}
@@ -206,10 +209,10 @@ input[type=password]:focus{border-color:#3D3D9E}
       <span id="user-chip-name" style="font-size:9px;font-weight:800;color:#2a2a7a;letter-spacing:.3px;text-transform:uppercase;margin-top:2px;max-width:64px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center">—</span>
     </div>
   </div>
-  <!-- Pestañas con ícono + texto -->
-  <div class="tabs" style="background:#2a2a7a;border-top:2px solid #A8C72A">
+  <!-- Pestañas dock estilo pastilla lima -->
+  <div style="background:#1a1a2e;padding:6px 8px;display:flex;gap:4px" id="tabs-bar">
     <button class="tab active" onclick="showTab('premios',this)"><i class="ti ti-trophy" aria-hidden="true"></i><span>Premios</span></button>
-    <button class="tab" onclick="showTab('ranking',this)"><i class="ti ti-chart-bar" aria-hidden="true"></i><span>Posiciones</span></button>
+    <button class="tab" onclick="showTab('ranking',this)"><i class="ti ti-chart-bar" aria-hidden="true"></i><span>Posic.</span></button>
     <button class="tab" onclick="showTab('partidos',this)"><i class="ti ti-calendar-event" aria-hidden="true"></i><span>Partidos</span></button>
     <button class="tab" onclick="showTab('pronosticos',this)"><i class="ti ti-target-arrow" aria-hidden="true"></i><span>Pronóst.</span></button>
     <button class="tab" onclick="showTab('perfil',this)"><i class="ti ti-id-badge" aria-hidden="true"></i><span>Perfil</span></button>
