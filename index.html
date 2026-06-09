@@ -233,6 +233,10 @@ input[type=password]:focus{border-color:#3D3D9E}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 
+
+
+
+
 const DOMAIN="sisol.com.mx";
 const DL=new Date("2026-06-11T13:00:00-05:00"); // 1pm hora México, antes del partido inaugural
 const RONDAS=["Fase de grupos","Octavos","Cuartos","Semifinal","Final","Campeón"];
@@ -535,7 +539,8 @@ function rPremios(){
   });
   if(!p3r) p3r='<div style="font-size:11px;color:#888;margin-top:4px">Sin pronósticos</div>';
 
-  let html='<div class="p-card p1">';
+  let html='<div style="display:flex;align-items:flex-start;gap:8px;background:#eeeef8;border-radius:10px;padding:10px 12px;margin-bottom:10px"><i class=\"ti ti-info-circle\" style=\"font-size:16px;color:#3D3D9E;flex-shrink:0;margin-top:1px\" aria-hidden=\"true\"></i><span style=\"font-size:12px;color:#3D3D9E;line-height:1.5\">Aquí verás quién va ganando cada uno de los 3 premios en tiempo real.</span></div>';
+  html+='<div class="p-card p1">';
   html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
   html+='<span style="font-size:22px">🥇</span>';
   html+='<div><div class="ptitle">Premio Mayor — Más Aciertos</div>';
@@ -589,7 +594,8 @@ function rRanking(){
   const pl=cache.matches.filter(function(m){ return m.result; }).length;
   const md=["🥇","🥈","🥉"];
 
-  let html='<div class="metrics">';
+  let html='<div style="display:flex;align-items:flex-start;gap:8px;background:#eeeef8;border-radius:10px;padding:10px 12px;margin-bottom:10px"><i class="ti ti-chart-bar" style="font-size:16px;color:#3D3D9E;flex-shrink:0;margin-top:1px" aria-hidden="true"></i><span style="font-size:12px;color:#3D3D9E;line-height:1.5">Tabla ordenada por aciertos. Las columnas 🏆 y 🇲🇽 muestran si acertaste el campeón y la ronda de México.</span></div>';
+  html+='<div class="metrics">';
   html+='<div class="met"><div class="mv">'+cache.users.length+'</div><div class="ml">Participantes</div></div>';
   html+='<div class="met"><div class="mv">'+pl+"/"+cache.matches.length+'</div><div class="ml">Jugados</div></div>';
   html+='<div class="met"><div class="mv">'+(all[0]?all[0].ac:0)+'</div><div class="ml">Líder</div></div>';
@@ -627,7 +633,8 @@ function setPartidosView(v){ partidosView=v; rPartidos(); }
 
 function rPartidos(){
   // Toggle buttons
-  let html='<div style="display:flex;gap:6px;margin-bottom:10px">';
+  let html='<div style="display:flex;align-items:flex-start;gap:8px;background:#eeeef8;border-radius:10px;padding:10px 12px;margin-bottom:10px"><i class="ti ti-calendar-event" style="font-size:16px;color:#3D3D9E;flex-shrink:0;margin-top:1px" aria-hidden="true"></i><span style="font-size:12px;color:#3D3D9E;line-height:1.5">Consulta todos los partidos del Mundial, su fecha, hora y resultado. Alterna entre vista de calendario y por grupos.</span></div>';
+  html+='<div style="display:flex;gap:6px;margin-bottom:10px">';
   html+='<button onclick="setPartidosView(\'calendario\')" style="flex:1;padding:8px;border:1px solid '+(partidosView==="calendario"?"#3D3D9E":"#e8e8e2")+';border-radius:8px;background:'+(partidosView==="calendario"?"#3D3D9E":"none")+';color:'+(partidosView==="calendario"?"#fff":"#888")+';font-size:12px;font-weight:600;cursor:pointer">📅 Calendario</button>';
   html+='<button onclick="setPartidosView(\'grupos\')" style="flex:1;padding:8px;border:1px solid '+(partidosView==="grupos"?"#3D3D9E":"#e8e8e2")+';border-radius:8px;background:'+(partidosView==="grupos"?"#3D3D9E":"none")+';color:'+(partidosView==="grupos"?"#fff":"#888")+';font-size:12px;font-weight:600;cursor:pointer">🏟️ Por grupos</button>';
   html+="</div>";
@@ -708,6 +715,7 @@ function rPronos(){
   const lk=!!sp.locked;
   const past=new Date()>DL;
   const ed=!lk && !past;
+  const instrPronos='<div style="display:flex;align-items:flex-start;gap:8px;background:#eeeef8;border-radius:10px;padding:10px 12px;margin-bottom:10px"><i class="ti ti-target-arrow" style="font-size:16px;color:#3D3D9E;flex-shrink:0;margin-top:1px" aria-hidden="true"></i><span style="font-size:12px;color:#3D3D9E;line-height:1.5">Elige el resultado de cada partido antes del <strong>11 de junio a la 1pm</strong>. Una vez confirmado no podrás cambiarlo.</span></div>';
   let ban="";
   if(lk){
     ban='<div class="lk-ban">🔒 Tus pronósticos están confirmados y bloqueados.</div>';
@@ -809,12 +817,13 @@ async function savePronos(){
 }
 
 function rPerfil(){
+  const instrPerfil='<div style="display:flex;align-items:flex-start;gap:8px;background:#eeeef8;border-radius:10px;padding:10px 12px;margin-bottom:10px"><i class="ti ti-id-badge" style="font-size:16px;color:#3D3D9E;flex-shrink:0;margin-top:1px" aria-hidden="true"></i><span style="font-size:12px;color:#3D3D9E;line-height:1.5">Edita tu nombre, consulta tus estadísticas y administra tu sesión.</span></div>';
   const sp=cache.spUsers[CU.id]||{};
   const locked=!!sp.locked;
   const myP=cache.pronos.filter(function(p){ return p.user_id===CU.id; });
   const s=getStats(CU.id);
   const ini=CU.name.split(" ").map(function(n){ return n[0]; }).slice(0,2).join("");
-  let html='<div class="card" style="text-align:center;padding:1.5rem 1.25rem">';
+  let html=instrPerfil+'<div class="card" style="text-align:center;padding:1.5rem 1.25rem">';
   html+='<div style="width:60px;height:60px;border-radius:50%;background:#3D3D9E;color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;margin:0 auto 10px">'+ini+"</div>";
   html+='<div style="font-size:18px;font-weight:600">'+CU.name+"</div>";
   html+='<div style="font-size:12px;color:#888;margin-top:3px">'+CU.email+"</div>";
@@ -870,6 +879,7 @@ async function doLogout(){
 }
 
 function rAdmin(){
+  const instrAdmin='<div style="display:flex;align-items:flex-start;gap:8px;background:#faeeda;border-radius:10px;padding:10px 12px;margin-bottom:10px"><i class="ti ti-settings" style="font-size:16px;color:#854F0B;flex-shrink:0;margin-top:1px" aria-hidden="true"></i><span style="font-size:12px;color:#854F0B;line-height:1.5">Panel exclusivo para administradores. Registra resultados, gestiona usuarios y controla los premios especiales.</span></div>';
   if(!CU || !CU.isAdmin){
     document.getElementById("tab-admin").innerHTML='<div style="padding:2rem;text-align:center;color:#888">No autorizado</div>';
     return;
@@ -880,7 +890,7 @@ function rAdmin(){
     g[m.grp].push(m);
   });
 
-  let html='<div class="card"><div class="ctitle">Resultados de Partidos</div>';
+  let html=instrAdmin+'<div class="card"><div class="ctitle">Resultados de Partidos</div>';
   Object.keys(g).forEach(function(gr){
     html+='<div class="glbl">'+gr+"</div>";
     g[gr].forEach(function(m){
@@ -1037,6 +1047,10 @@ function toast(msg){
   });
   showScreen("login");
 })();
+
+
+
+
 
 </script>
 </body>
