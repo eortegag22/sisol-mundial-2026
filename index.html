@@ -260,6 +260,7 @@ input[type=password]:focus{border-color:#3D3D9E}
 
 
 
+
 const DOMAINS=["sisol.com.mx","vidamarresidencial.com","bonanzaprisma.com"];
 const DL=new Date("2026-06-11T13:00:00-05:00"); // 1pm hora México, antes del partido inaugural
 const RONDAS=["Fase de grupos","Octavos","Cuartos","Semifinal","Final","Campeón"];
@@ -990,14 +991,17 @@ function rAdmin(){
     uHtml+='<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #e8e8e2">';
     uHtml+='<div class="pav">'+ini+"</div>";
     const uSpCheck=cache.spUsers[u.id]||{};
-    const lockIcon=uSpCheck.locked ? ' <span style="font-size:10px;background:#f0f8f0;color:#2a6a2a;padding:1px 6px;border-radius:10px">🔒</span>' : ' <span style="font-size:10px;background:#fff8e8;color:#854F0B;padding:1px 6px;border-radius:10px">⏳</span>';
+    const lockIcon=uSpCheck.locked
+      ? ' <span style="font-size:10px;background:#f0f8f0;color:#2a6a2a;padding:1px 6px;border-radius:10px">🔒 Bloqueado</span>'
+      : uSpCheck.admin_unlocked
+        ? ' <span style="font-size:10px;background:#eeeef8;color:#3D3D9E;padding:1px 6px;border-radius:10px">🔓 Desbloqueado por admin</span>'
+        : ' <span style="font-size:10px;background:#fff8e8;color:#854F0B;padding:1px 6px;border-radius:10px">⏳ Pendiente</span>';
     uHtml+='<div><div style="font-size:13px;font-weight:600">'+u.name+lockIcon+'</div><div style="font-size:11px;color:#888">'+u.email+"</div></div>";
     if(u.is_admin) uHtml+='<span style="font-size:10px;background:#A8C72A;color:#2a2a7a;padding:1px 7px;border-radius:20px;font-weight:700;margin-left:auto">admin</span>';
     if(u.id!==CU.id){
     const uSp=cache.spUsers[u.id]||{};
-    const uStats=getStats(u.id);
-    if(uSp.locked){
-      uHtml+='<button data-unlock-uid="'+u.id+'" class="unlock-btn" style="margin-left:auto;padding:5px 8px;background:#eeeef8;color:#3D3D9E;border:1px solid #b0b0d8;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600">🔓 Desbloquear</button>';
+    if(uSp.locked || uSp.admin_unlocked===false){
+      uHtml+='<button onclick="adminUnlock(\''+u.id+'\')" style="margin-left:auto;padding:5px 8px;background:#eeeef8;color:#3D3D9E;border:1px solid #b0b0d8;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600">🔓 Desbloquear</button>';
     }
     uHtml+='<button data-uid="'+u.id+'" data-uname="'+u.name.replace(/"/g,"&quot;")+'" class="del-user-btn" style="padding:5px 8px;background:#fdecea;color:#c03020;border:1px solid #f09595;border-radius:6px;font-size:11px;cursor:pointer">🗑️</button>';
     }
@@ -1032,7 +1036,12 @@ async function adminUnlock(uid){
   const u=cache.users.find(function(x){ return x.id===uid; });
   if(!u) return;
   if(!confirm("¿Desbloquear los pronósticos de "+u.name+"? Podrá editarlos nuevamente.")) return;
-  await SB.from("quinela_special_user").update({locked:false, admin_unlocked:true}).eq("user_id",uid);
+  // Upsert in case no sp record exists yet
+  const {error} = await SB.from("quinela_special_user").upsert(
+    {user_id:uid, locked:false, admin_unlocked:true},
+    {onConflict:"user_id"}
+  );
+  if(error){ toast("Error: "+error.message); return; }
   await SB.from("quinela_pronosticos").update({locked:false}).eq("user_id",uid);
   await loadAll();
   toast(u.name+" desbloqueado ✓");
@@ -1098,6 +1107,7 @@ function toast(msg){
   });
   showScreen("login");
 })();
+
 
 
 
