@@ -479,7 +479,11 @@ function rPronos(){
       let dCls="pb"; if(p==="D"){ dCls+=" sD"; if(r) dCls+=p===r?" hit":" miss"; } if(!ed) dCls+=" locked";
       let aCls="pb"; if(p==="A"){ aCls+=" sA"; if(r) aCls+=p===r?" hit":" miss"; } if(!ed) aCls+=" locked";
       html+='<div class="prowp"><div class="pterms"><div style="display:flex;align-items:center;gap:3px;flex-wrap:wrap"><span>'+m.home_flag+'</span><span style="font-weight:600">'+m.home_name+'</span><span style="color:#ccc;font-size:10px">vs</span><span style="font-weight:600">'+m.away_name+'</span><span>'+m.away_flag+"</span>"+ds+"</div></div>";
-      html+='<div class="pbtns"><button class="'+hCls+'" onclick="sP('+m.id+",'H')" '+(ed?"":"disabled")+'>'+m.home_flag+'</button><button class="'+dCls+'" onclick="sP('+m.id+",'D')" '+(ed?"":"disabled")+'>E</button><button class="'+aCls+'" onclick="sP('+m.id+",'A')" '+(ed?"":"disabled")+'>'+m.away_flag+'</button></div><span class="si">'+ic+"</span></div>";
+      html+='<div class="pbtns">';
+      html+='<button class="'+hCls+'" onclick="sP('+m.id+',\'H\')" '+(ed?'':'disabled')+'>'+m.home_flag+'</button>';
+      html+='<button class="'+dCls+'" onclick="sP('+m.id+',\'D\')" '+(ed?'':'disabled')+'>E</button>';
+      html+='<button class="'+aCls+'" onclick="sP('+m.id+',\'A\')" '+(ed?'':'disabled')+'>'+m.away_flag+'</button>';
+      html+='</div><span class="si">'+ic+'</span></div>';
     });
     html+="</div>";
   });
@@ -551,7 +555,16 @@ function rAdmin(){
     html+='<div class="glbl">'+gr+"</div>";
     g[gr].forEach(function(m){
       const ds=m.match_date?'<span style="font-size:9px;color:#888;display:block;margin-bottom:3px">'+fmtDate(m.match_date)+"</span>":"";
-      html+='<div class="mrow" style="flex-direction:column;align-items:stretch;padding:8px 0">'+ds+'<div style="display:flex;align-items:center;gap:5px"><div class="tb"><span class="fl">'+m.home_flag+'</span><span class="tn">'+m.home_name+'</span></div><div class="rbtns"><button class="rb '+(m.result==="H"?"sH":"")+'" onclick="setR('+m.id+",'H')\">"+m.home_flag+'</button><button class="rb '+(m.result==="D"?"sD":"")+'" onclick="setR('+m.id+",'D')\">E</button><button class=\"rb "+(m.result==="A"?"sA":"")+'" onclick="setR('+m.id+",'A')\">"+m.away_flag+'</button></div><div class="tb aw"><span class="tn">'+m.away_name+'</span><span class="fl">'+m.away_flag+"</span></div></div></div>";
+      html+='<div class="mrow" style="flex-direction:column;align-items:stretch;padding:8px 0">'+ds;
+      html+='<div style="display:flex;align-items:center;gap:5px">';
+      html+='<div class="tb"><span class="fl">'+m.home_flag+'</span><span class="tn">'+m.home_name+'</span></div>';
+      html+='<div class="rbtns">';
+      html+='<button class="rb '+(m.result==='H'?'sH':'')+'" onclick="setR('+m.id+',\'H\')">'+m.home_flag+'</button>';
+      html+='<button class="rb '+(m.result==='D'?'sD':'')+'" onclick="setR('+m.id+',\'D\')">E</button>';
+      html+='<button class="rb '+(m.result==='A'?'sA':'')+'" onclick="setR('+m.id+',\'A\')">'+m.away_flag+'</button>';
+      html+='</div>';
+      html+='<div class="tb aw"><span class="tn">'+m.away_name+'</span><span class="fl">'+m.away_flag+'</span></div>';
+      html+='</div></div>';
     });
   });
   html+='</div><div class="card"><div class="ctitle">Resultados Especiales</div><div class="s-lbl" style="margin-top:4px">🏆 Campeón del Mundial</div><select class="adm-sel" id="adm-c" onchange="saveSpec()"><option value="">— Sin definir —</option>';
