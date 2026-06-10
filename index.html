@@ -176,7 +176,7 @@ try{var b=new Blob([JSON.stringify(m)],{type:'application/json'});var u=URL.crea
   <div id="step-email" class="s-card">
     <div class="s-title">Ingresa tu correo</div>
     <div class="s-lbl">Correo empresarial</div>
-    <input type="text" id="inp-email" placeholder="tunombre@sisol.com.mx" oninput="validateEmailInput()" onkeydown="if(event.key==='Enter')sendMagicLink()">
+    <input type="text" id="inp-email" placeholder="tunombre@sisol.com.mx" oninput="if(typeof validateEmailInput==='function')validateEmailInput()" onkeydown="if(event.key==='Enter')sendMagicLink()">
     <div class="err" id="err-email">Solo se permiten correos @sisol.com.mx, @vidamarresidencial.com o @bonanzaprisma.com</div>
     <p style="font-size:11px;color:#888;margin-bottom:10px;line-height:1.4">Te enviaremos un enlace de acceso. Sin contraseña.</p>
     <button class="btn-p" id="btn-send" onclick="sendMagicLink()" disabled>Enviar enlace de acceso &rarr;</button>
@@ -269,6 +269,11 @@ try{var b=new Blob([JSON.stringify(m)],{type:'application/json'});var u=URL.crea
 
 
 
+// Re-bind input validation after DOM ready
+document.addEventListener('DOMContentLoaded', function(){
+  var inp=document.getElementById('inp-email');
+  if(inp) inp.addEventListener('input', validateEmailInput);
+});
 const DOMAINS=["sisol.com.mx","vidamarresidencial.com","bonanzaprisma.com"];
 const DL=new Date("2026-06-11T13:00:00-05:00"); // 1pm hora México, antes del partido inaugural
 const RONDAS=["Fase de grupos","Octavos","Cuartos","Semifinal","Final","Campeón"];
