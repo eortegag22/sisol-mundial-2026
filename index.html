@@ -326,13 +326,25 @@ function goToPerfil(){
   for(let t of tabs){ if(t.textContent.includes("Perfil")){ showTab("perfil",t); break; } }
 }
 
+async function fetchAllRows(table){
+  var all=[], from=0, size=1000;
+  while(true){
+    var res=await SB.from(table).select("*").range(from, from+size-1);
+    if(res.error){ break; }
+    all=all.concat(res.data||[]);
+    if(!res.data || res.data.length<size){ break; }
+    from+=size;
+  }
+  return {data:all};
+}
+
 async function loadAll(){
   const [r1,r2,r3,r4,r5]=await Promise.all([
     SB.from("quinela_profiles").select("id,name,email,is_admin").order("created_at"),
     SB.from("quinela_matches").select("*").order("id"),
-    SB.from("quinela_pronosticos").select("*"),
+    fetchAllRows("quinela_pronosticos"),
     SB.from("quinela_special").select("*"),
-    SB.from("quinela_special_user").select("*"),
+    fetchAllRows("quinela_special_user"),
   ]);
   cache.users=r1.data||[]; cache.matches=r2.data||[]; cache.pronos=r3.data||[];
   cache.special=(r4.data||[])[0]||{}; cache.spUsers={};
