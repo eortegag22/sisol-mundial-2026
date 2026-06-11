@@ -222,7 +222,7 @@ input[type=text]:focus{border-color:var(--sb)}
 <script>
 
 const DOMAINS=["sisol.com.mx","vidamarresidencial.com","bonanzaprisma.com"];
-const DL=new Date("2026-06-11T13:55:00-06:00");
+const DL=new Date("2026-06-11T13:00:00-06:00");
 const RONDAS=["Fase de grupos","Octavos","Cuartos","Semifinal","Final","Campeón"];
 const EQUIPOS=["México","Sudáfrica","Corea del Sur","Rep. Checa","Canadá","Bosnia","Qatar","Suiza","Brasil","Marruecos","Haití","Escocia","EUA","Paraguay","Australia","Turquía","Alemania","Curazao","Costa de Marfil","Ecuador","Holanda","Túnez","Suecia","Japón","Bélgica","Egipto","Irán","Nueva Zelanda","España","Cabo Verde","Arabia Saudita","Uruguay","Francia","Senegal","Irak","Noruega","Argentina","Argelia","Austria","Jordania","Portugal","Congo DR","Uzbekistán","Colombia","Inglaterra","Croacia","Ghana","Panamá"];
 const FLAGS={México:"🇲🇽",EUA:"🇺🇸",Canadá:"🇨🇦",Brasil:"🇧🇷",Argentina:"🇦🇷",Francia:"🇫🇷",Alemania:"🇩🇪",España:"🇪🇸",Portugal:"🇵🇹",Bélgica:"🇧🇪",Japón:"🇯🇵",Holanda:"🇳🇱",Inglaterra:"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Corea del Sur":"🇰🇷",Croacia:"🇭🇷",Marruecos:"🇲🇦",Colombia:"🇨🇴",Polonia:"🇵🇱",Uruguay:"🇺🇾",Suiza:"🇨🇭",Australia:"🇦🇺",Turquía:"🇹🇷",Senegal:"🇸🇳",Noruega:"🇳🇴",Austria:"🇦🇹",Sudáfrica:"🇿🇦","Rep. Checa":"🇨🇿",Bosnia:"🇧🇦",Qatar:"🇶🇦",Haití:"🇭🇹",Escocia:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",Paraguay:"🇵🇾",Curazao:"🇨🇼","Costa de Marfil":"🇨🇮",Ecuador:"🇪🇨",Túnez:"🇹🇳",Suecia:"🇸🇪",Egipto:"🇪🇬",Irán:"🇮🇷","Nueva Zelanda":"🇳🇿","Cabo Verde":"🇨🇻","Arabia Saudita":"🇸🇦",Irak:"🇮🇶",Argelia:"🇩🇿",Jordania:"🇯🇴","Congo DR":"🇨🇩",Uzbekistán:"🇺🇿",Ghana:"🇬🇭",Panamá:"🇵🇦"};
@@ -405,7 +405,14 @@ function rRanking(){
   const all=cache.users.map(function(u){ return Object.assign({},u,getStats(u.id)); });
   all.sort(function(a,b){ return b.ac-a.ac; });
   const pl=cache.matches.filter(function(m){ return m.result; }).length;
-  const md=["🥇","🥈","🥉"];
+  // Medallas por puntaje igual, no por posición
+  var rank=1;
+  all.forEach(function(u,i){
+    if(i===0){ u.rank=1; }
+    else if(u.ac===all[i-1].ac){ u.rank=all[i-1].rank; }
+    else{ rank=i+1; u.rank=rank; }
+  });
+  const md={1:"🥇",2:"🥈",3:"🥉"};
   const instrR='<div style="display:flex;align-items:flex-start;gap:8px;background:#eeeef8;border-radius:10px;padding:10px 12px;margin-bottom:10px"><i class="ti ti-chart-bar" style="font-size:16px;color:#3D3D9E;flex-shrink:0;margin-top:1px"></i><span style="font-size:12px;color:#3D3D9E;line-height:1.5">Tabla ordenada por aciertos. Las columnas 🏆 y 🇲🇽 muestran si acertaste el campeón y la ronda de México.</span></div>';
   let html=instrR+'<div class="metrics"><div class="met"><div class="mv">'+cache.users.length+'</div><div class="ml">Participantes</div></div><div class="met"><div class="mv">'+pl+"/"+cache.matches.length+'</div><div class="ml">Jugados</div></div><div class="met"><div class="mv">'+(all[0]?all[0].ac:0)+'</div><div class="ml">Líder</div></div></div><div class="card"><table class="rt"><thead><tr><th>#</th><th>Participante</th><th>Aciertos</th><th>🏆</th><th>🇲🇽</th></tr></thead><tbody>';
   all.forEach(function(u,i){
@@ -413,7 +420,7 @@ function rRanking(){
     let c=cache.special.campeon?(sp.campeon===cache.special.campeon?"✅":"❌"):(sp.campeon?(FLAGS[sp.campeon]||"")+" "+sp.campeon:"—");
     let r=cache.special.ronda_mexico?(sp.ronda_mexico===cache.special.ronda_mexico?"✅":"❌"):(sp.ronda_mexico||"—");
     const youTag=u.id===CU.id?'<span style="font-size:9px;color:#7a9310;margin-left:4px;font-weight:700">TÚ</span>':"";
-    html+='<tr class="'+(i<3?"r"+(i+1)+'\"':"\"")+'><td>'+(md[i]||(i+1))+'</td><td style="font-weight:600">'+u.name+youTag+'</td><td><span class="sc count-num" style="animation-delay:'+(i*0.07)+'s">'+u.ac+'</span></td><td style="font-size:11px">'+c+'</td><td style="font-size:11px">'+r+'</td></tr>';
+    html+='<tr class="'+(u.rank<=3?"r"+u.rank+'\"':"\"")+'><td>'+(md[u.rank]||(i+1))+'</td><td style="font-weight:600">'+u.name+youTag+'</td><td><span class="sc count-num" style="animation-delay:'+(i*0.07)+'s">'+u.ac+'</span></td><td style="font-size:11px">'+c+'</td><td style="font-size:11px">'+r+'</td></tr>';
   });
   html+="</tbody></table></div>";
   document.getElementById("tab-ranking").innerHTML=html;
