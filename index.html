@@ -653,5 +653,8 @@ function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg
 
 document.getElementById('inp-email').addEventListener('input', validateEmailInput);
 document.getElementById('inp-email').addEventListener('keydown', function(e){ if(e.key==='Enter') sendMagicLink(); });
+
+// Auto-refresh cada 3 minutos si el usuario está logueado
+setInterval(function(){ if(CU) loadAll(); }, 3 * 60 * 1000);
 </script>
 </body></html>
