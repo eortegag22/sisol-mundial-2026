@@ -220,6 +220,27 @@ input[type=text]:focus{border-color:var(--sb)}
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+const APP_VERSION="1781884489";
+// Auto-detector de versión: recarga UNA sola vez si hay versión nueva (sin loops)
+(function(){
+  try{
+    // Evitar loop: si ya recargamos hace menos de 30 seg, no volver a hacerlo
+    var lastReload=0;
+    try{ lastReload=parseInt(sessionStorage.getItem("sv_reload")||"0"); }catch(e){}
+    var now=Date.now();
+    if(now-lastReload < 30000){ return; }
+    fetch(window.location.pathname+"?_t="+now, {cache:"no-store"})
+      .then(function(r){ return r.text(); })
+      .then(function(txt){
+        var m=txt.match(/const APP_VERSION="(\d+)"/);
+        if(m && m[1] && m[1]!==APP_VERSION){
+          try{ sessionStorage.setItem("sv_reload", String(Date.now())); }catch(e){}
+          window.location.reload();
+        }
+      })
+      .catch(function(){});
+  }catch(e){}
+})();
 
 const DOMAINS=["sisol.com.mx","vidamarresidencial.com","bonanzaprisma.com"];
 const DL=new Date("2026-06-11T13:00:00-06:00");
