@@ -248,10 +248,15 @@ function validateEmailInput(){
 
 function fmtDate(d){
   if(!d) return "";
-  const dt=new Date(d);
+  // Mostrar en hora CDMX (UTC-6)
+  const dt=new Date(new Date(d).getTime() - 6*60*60*1000);
   const days=["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
   const mo=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
-  return days[dt.getDay()]+" "+dt.getDate()+" "+mo[dt.getMonth()]+" · "+String(dt.getHours()).padStart(2,"0")+":"+String(dt.getMinutes()).padStart(2,"0");
+  return days[dt.getUTCDay()]+" "+dt.getUTCDate()+" "+mo[dt.getUTCMonth()]+" · "+String(dt.getUTCHours()).padStart(2,"0")+":"+String(dt.getUTCMinutes()).padStart(2,"0")+" CDMX";
+}
+function toCDMXDate(d){
+  // Retorna Date ajustado a CDMX para agrupar por día correcto
+  return new Date(new Date(d).getTime() - 6*60*60*1000);
 }
 
 async function sendMagicLink(){
@@ -449,7 +454,7 @@ function rPartidos(){
   html+='</div>';
   const g={};
   if(partidosView==="calendario"){
-    cache.matches.forEach(function(m){ const dk=m.match_date?new Date(m.match_date).toDateString():"Sin fecha"; if(!g[dk]) g[dk]=[]; g[dk].push(m); });
+    cache.matches.forEach(function(m){ var dk; if(m.match_date){ var cdmx=toCDMXDate(m.match_date); dk=cdmx.getUTCFullYear()+"-"+String(cdmx.getUTCMonth()+1).padStart(2,"0")+"-"+String(cdmx.getUTCDate()).padStart(2,"0"); }else{ dk="Sin fecha"; } if(!g[dk]) g[dk]=[]; g[dk].push(m); });
   } else {
     cache.matches.forEach(function(m){ if(!g[m.grp]) g[m.grp]=[]; g[m.grp].push(m); });
   }
@@ -466,7 +471,9 @@ function rPartidos(){
     const ms=g[gr];
     let grLabel=gr;
     if(partidosView==="calendario"&&gr!=="Sin fecha"){
-      const dt=new Date(gr); const days=["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"]; const mo=["Ene","Feb","Mar","Abr","May","Jun","Jul"]; grLabel=days[dt.getDay()]+" "+dt.getDate()+" de "+mo[dt.getMonth()];
+      var parts=gr.split("-"); var dt=new Date(Date.UTC(parseInt(parts[0]),parseInt(parts[1])-1,parseInt(parts[2])));
+      const days=["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"]; const mo=["Ene","Feb","Mar","Abr","May","Jun","Jul"];
+      grLabel=days[dt.getUTCDay()]+" "+dt.getUTCDate()+" de "+mo[dt.getUTCMonth()];
     }
     html+='<div class="glbl">'+grLabel+'</div><div class="card">';
     ms.forEach(function(m){
