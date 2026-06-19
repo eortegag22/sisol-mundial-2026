@@ -220,7 +220,7 @@ input[type=text]:focus{border-color:var(--sb)}
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-const APP_VERSION="1781884489";
+const APP_VERSION="1781891173";
 // Auto-detector de versión: recarga UNA sola vez si hay versión nueva (sin loops)
 (function(){
   try{
@@ -490,6 +490,14 @@ function rPartidos(){
   }
   keys.forEach(function(gr){
     const ms=g[gr];
+    // Ordenar partidos dentro del día por hora
+    if(partidosView==="calendario"){
+      ms.sort(function(a,b){
+        if(!a.match_date) return 1;
+        if(!b.match_date) return -1;
+        return new Date(a.match_date)-new Date(b.match_date);
+      });
+    }
     let grLabel=gr;
     if(partidosView==="calendario"&&gr!=="Sin fecha"){
       var parts=gr.split("-"); var dt=new Date(Date.UTC(parseInt(parts[0]),parseInt(parts[1])-1,parseInt(parts[2])));
